@@ -60,6 +60,8 @@ uint8_t rx_len;		//RX packet length according to the packet
 uint8_t tx_len;
 uint8_t tx_array_inx;  //index for tX parsing buffer
 uint8_t calc_CS;	   //calculated Chacksum
+inline static uint8_t nextIndex = 0;
+uint8_t index;
 };
 
 

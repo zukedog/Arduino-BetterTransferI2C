@@ -8,7 +8,7 @@ void BetterTransferI2CMaster::begin(uint8_t * ptr, uint8_t length, TwoWire *theS
 	address = ptr;
 	size = length;
 	_serial = theSerial;
-
+    index = BetterTransferI2CMaster::nextIndex++;
 	//dynamic creation of rx parsing buffer in RAM
 	rx_buffer = (uint8_t*) malloc(size);
 }
@@ -21,6 +21,7 @@ void BetterTransferI2CMaster::sendData(uint8_t i2c_address){
   _serial->write(0x06);
   _serial->write(0x85);
   _serial->write(size);
+  _serial->write(index);
   for(int i = 0; i<size; i++){
     CS^=*(address+i);
     _serial->write(*(address+i));
@@ -36,6 +37,7 @@ boolean BetterTransferI2CMaster::receiveData(uint8_t i2c_address){
   _serial->write(0x06);
   _serial->write(0x85);
   _serial->write(size);//We might not use this on the slave but we are only looking at data if there is 3 bytes or more
+  //say what we want
   _serial->endTransmission();
 
   _serial->requestFrom(i2c_address, (uint8_t)(size+4));
@@ -48,17 +50,18 @@ boolean BetterTransferI2CMaster::receiveData(uint8_t i2c_address){
     return false;
   }
 
-    if(_serial->available() < 3){
-        return false;
-    }
+  if(_serial->available() < 3){
+      return false;
+  }
 
-    if (_serial->read() == 0x85){
-      rx_len = _serial->read();
-      //make sure the binary structs on both Arduinos are the same size.
-      if(rx_len != size){
-        return false;
-      }
+  if (_serial->read() == 0x85){
+    rx_len = _serial->read();
+    //make sure the binary structs on both Arduinos are the same size.
+    if(rx_len != size){
+      return false;
     }
+    //Check the data is what we reqested;
+  }
 
   //we get here if we already found the header bytes, the struct size matched what we know, and now we are byte aligned.
   while(_serial->available() && rx_array_inx <= rx_len){

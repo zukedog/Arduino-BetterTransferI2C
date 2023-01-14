@@ -43,25 +43,29 @@ GNU General Public License for more details.
 #include <stdint.h>
 #include <avr/io.h>
 #include <Wire.h>
+#include <LinkedList.h>
 
 class BetterTransferI2CSlave {
 public:
-void begin(uint8_t *, uint8_t, TwoWire *theSerial);
+void begin(uint8_t *, uint8_t);
 void sendData();
-boolean receiveData();
+static void onReceive(int);
+boolean updateData();
 private:
-TwoWire *_serial;
+void receiveData();
 //NewSoftSerial *_serial;
 uint8_t * address;  //address of struct
 uint8_t size;       //size of struct
 uint8_t * rx_buffer; //address for temporary storage and parsing buffer
 uint8_t rx_array_inx;  //index for RX parsing buffer
-uint8_t rx_len;		//RX packet length according to the packet
+inline static uint8_t rx_len = 0;		//RX packet length according to the packet
+inline static uint8_t currentIndex = 0;
+inline static uint8_t nextIndex = 0;
 uint8_t tx_len;
 uint8_t tx_array_inx;  //index for tX parsing buffer
 uint8_t calc_CS;	   //calculated Chacksum
+inline static LinkedList<BetterTransferI2CSlave*> list = LinkedList<BetterTransferI2CSlave*>();
+
 };
-
-
 
 #endif
