@@ -49,6 +49,7 @@ class BetterTransferI2CSlave {
 public:
 void begin(uint8_t *, uint8_t);
 void sendData();
+static void onSend();
 static void onReceive(int);
 boolean updateData();
 private:
@@ -61,6 +62,7 @@ uint8_t rx_array_inx;  //index for RX parsing buffer
 inline static uint8_t rx_len = 0;		//RX packet length according to the packet
 inline static uint8_t currentIndex = 0;
 inline static uint8_t nextIndex = 0;
+inline static uint8_t requestedIndex = 0;
 uint8_t tx_len;
 uint8_t tx_array_inx;  //index for tX parsing buffer
 uint8_t calc_CS;	   //calculated Chacksum

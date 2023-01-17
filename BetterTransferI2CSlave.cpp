@@ -11,12 +11,18 @@ void BetterTransferI2CSlave::begin(uint8_t * ptr, uint8_t length){
     BetterTransferI2CSlave::nextIndex++;
 }
 
+void BetterTransferI2CSlave::onSend(){
+  if (requestedIndex >= nextIndex){
+    return;
+  }
+  list.get(requestedIndex)->sendData();
+}
+
 void BetterTransferI2CSlave::sendData(){
   uint8_t CS = size;
   Wire.write(0x06);
   Wire.write(0x85);
   Wire.write(size);
-  //say what it is
   for(int i = 0; i<size; i++){
     CS^=*(address+i);
     Wire.write(*(address+i));
@@ -37,13 +43,19 @@ void BetterTransferI2CSlave::onReceive(int numBytes){
         if(Wire.available() < 4)
           return;
       }
-      if (Wire.read() == 0x85){
-        BetterTransferI2CSlave::rx_len = Wire.read();
-        currentIndex = Wire.read();
-        if (currentIndex >= nextIndex){
-          BetterTransferI2CSlave::rx_len = 0;
-          return;
-        }
+      switch(Wire.read()){
+        case 0x85:
+          BetterTransferI2CSlave::rx_len = Wire.read();
+          currentIndex = Wire.read();
+          if (currentIndex >= nextIndex){
+            BetterTransferI2CSlave::rx_len = 0;
+            return;
+          }
+          break;
+        case 0x23:
+          Wire.read();
+          BetterTransferI2CSlave::requestedIndex = Wire.read();
+          break;
       }
     }
   }

@@ -35,9 +35,10 @@ boolean BetterTransferI2CMaster::receiveData(uint8_t i2c_address){
   //Send header bits to show that we want info
   _serial->beginTransmission(i2c_address);
   _serial->write(0x06);
-  _serial->write(0x85);
+  _serial->write(0x23);
   _serial->write(size);//We might not use this on the slave but we are only looking at data if there is 3 bytes or more
   //say what we want
+  _serial->write(index);
   _serial->endTransmission();
 
   _serial->requestFrom(i2c_address, (uint8_t)(size+4));
