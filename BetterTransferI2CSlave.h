@@ -51,8 +51,9 @@ void begin(uint8_t *, uint8_t);
 void sendData();
 static void onSend();
 static void onReceive(int);
-boolean updateData();
+boolean newData();
 private:
+bool updated;
 void receiveData();
 //NewSoftSerial *_serial;
 uint8_t * address;  //address of struct

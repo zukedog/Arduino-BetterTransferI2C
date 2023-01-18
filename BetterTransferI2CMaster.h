@@ -44,13 +44,43 @@ GNU General Public License for more details.
 #include <avr/io.h>
 #include <Wire.h>
 
+class BT_Address {
+public:
+    BT_Address(uint8_t i2cAddress, TwoWire *theSerial){
+        _serial = theSerial;
+        i2c_address = i2cAddress;
+        nextIndex = 0;
+    }
+
+    uint8_t getNextIndex(){
+        return nextIndex++;
+    }
+
+    uint8_t getI2CAddress(){
+        return i2c_address;
+    }
+
+    TwoWire * getSerial(){
+        return _serial;
+    }
+
+private:
+    TwoWire *_serial;
+    uint8_t nextIndex;
+    uint8_t i2c_address;
+};
+
+
+
 class BetterTransferI2CMaster {
 public:
-void begin(uint8_t *, uint8_t, TwoWire *theSerial);
-void sendData(uint8_t address);
-boolean receiveData(uint8_t address);
+BetterTransferI2CMaster (uint8_t *, uint8_t, BT_Address *);
+void sendData();
+boolean receiveData();
+
 private:
 TwoWire *_serial;
+uint8_t i2c_address;
 //NewSoftSerial *_serial;
 uint8_t * address;  //address of struct
 uint8_t size;       //size of struct
@@ -60,9 +90,10 @@ uint8_t rx_len;		//RX packet length according to the packet
 uint8_t tx_len;
 uint8_t tx_array_inx;  //index for tX parsing buffer
 uint8_t calc_CS;	   //calculated Chacksum
-inline static uint8_t nextIndex = 0;
 uint8_t index;
 };
+
+
 
 
 

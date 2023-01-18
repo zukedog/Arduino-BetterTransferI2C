@@ -86,7 +86,10 @@ void BetterTransferI2CSlave::receiveData(){
       }
 
       if(calc_CS == rx_buffer[rx_array_inx-1]){//CS good
-        memcpy(address,rx_buffer,size);
+        if (memcmp(address,rx_buffer,size)){
+          memcpy(address,rx_buffer,size);
+          updated = true;
+        }
 		BetterTransferI2CSlave::rx_len = 0;
 		rx_array_inx = 0;
 		return; //return true;
@@ -105,6 +108,10 @@ void BetterTransferI2CSlave::receiveData(){
   return; //return false;
 }
 
-boolean BetterTransferI2CSlave::updateData(){
-  return true;
+boolean BetterTransferI2CSlave::newData(){
+  if (updated){
+    updated = false;
+    return true;
+  }
+  return false;
 }

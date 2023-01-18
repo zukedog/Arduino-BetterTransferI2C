@@ -4,18 +4,20 @@
 
 
 //Captures address and size of struct
-void BetterTransferI2CMaster::begin(uint8_t * ptr, uint8_t length, TwoWire *theSerial){
+BetterTransferI2CMaster::BetterTransferI2CMaster(uint8_t * ptr, uint8_t length, BT_Address * info){
 	address = ptr;
 	size = length;
-	_serial = theSerial;
-    index = BetterTransferI2CMaster::nextIndex++;
+	_serial = info->getSerial();
+    i2c_address = info->getI2CAddress();
+    index = info->getNextIndex();
+    //index = BetterTransferI2CMaster::nextIndex++;
 	//dynamic creation of rx parsing buffer in RAM
 	rx_buffer = (uint8_t*) malloc(size);
 }
 
 
 //Sends out struct in binary, with header, length info and checksum
-void BetterTransferI2CMaster::sendData(uint8_t i2c_address){
+void BetterTransferI2CMaster::sendData(){
   uint8_t CS = size;
   _serial->beginTransmission(i2c_address);
   _serial->write(0x06);
@@ -31,7 +33,7 @@ void BetterTransferI2CMaster::sendData(uint8_t i2c_address){
 }
 
 
-boolean BetterTransferI2CMaster::receiveData(uint8_t i2c_address){
+boolean BetterTransferI2CMaster::receiveData(){
   //Send header bits to show that we want info
   _serial->beginTransmission(i2c_address);
   _serial->write(0x06);
@@ -78,11 +80,15 @@ boolean BetterTransferI2CMaster::receiveData(uint8_t i2c_address){
     }
 
     if(calc_CS == rx_buffer[rx_array_inx-1]){//CS good
-      memcpy(address,rx_buffer,size);
-      rx_len = 0;
-      rx_array_inx = 0;
-      return true;
+        rx_len = 0;
+        rx_array_inx = 0;
+      if (memcmp(address, rx_buffer,size)){
+        memcpy(address,rx_buffer,size);
+        return true;
+      }else{
+        return false;
       }
+    }
 
     else{
     //failed checksum, need to clear this out anyway
