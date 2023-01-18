@@ -2,13 +2,13 @@
 
 
 void BetterTransferI2CSlave::begin(uint8_t * ptr, uint8_t length){
-	address = ptr;
-	size = length;
+  address = ptr;
+  size = length;
 
-	//dynamic creation of rx parsing buffer in RAM
-	rx_buffer = (uint8_t*) malloc(size);
-    list.add(this);
-    BetterTransferI2CSlave::nextIndex++;
+  //dynamic creation of rx parsing buffer in RAM
+  rx_buffer = (uint8_t*) malloc(size);
+  list.add(this);
+  BetterTransferI2CSlave::nextIndex++;
 }
 
 void BetterTransferI2CSlave::onSend(){
@@ -90,17 +90,17 @@ void BetterTransferI2CSlave::receiveData(){
           memcpy(address,rx_buffer,size);
           updated = true;
         }
-		BetterTransferI2CSlave::rx_len = 0;
-		rx_array_inx = 0;
-		return; //return true;
-		}
+        BetterTransferI2CSlave::rx_len = 0;
+        rx_array_inx = 0;
+        return; //return true;
+      }
 
-	  else{
-	  //failed checksum, need to clear this out anyway
-		BetterTransferI2CSlave::rx_len = 0;
-		rx_array_inx = 0;
-		return; //return false;
-	  }
+      else{
+        //failed checksum, need to clear this out anyway
+        BetterTransferI2CSlave::rx_len = 0;
+        rx_array_inx = 0;
+        return; //return false;
+      }
 
     }
   }

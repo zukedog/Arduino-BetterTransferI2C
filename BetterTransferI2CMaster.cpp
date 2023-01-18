@@ -5,14 +5,14 @@
 
 //Captures address and size of struct
 BetterTransferI2CMaster::BetterTransferI2CMaster(uint8_t * ptr, uint8_t length, BT_Address * info){
-	address = ptr;
-	size = length;
-	_serial = info->getSerial();
-    i2c_address = info->getI2CAddress();
-    index = info->getNextIndex();
-    //index = BetterTransferI2CMaster::nextIndex++;
-	//dynamic creation of rx parsing buffer in RAM
-	rx_buffer = (uint8_t*) malloc(size);
+  address = ptr;
+  size = length;
+  _serial = info->getSerial();
+  i2c_address = info->getI2CAddress();
+  index = info->getNextIndex();
+  //index = BetterTransferI2CMaster::nextIndex++;
+  //dynamic creation of rx parsing buffer in RAM
+  rx_buffer = (uint8_t*) malloc(size);
 }
 
 
@@ -54,7 +54,7 @@ boolean BetterTransferI2CMaster::receiveData(){
   }
 
   if(_serial->available() < 3){
-      return false;
+    return false;
   }
 
   if (_serial->read() == 0x85){
@@ -80,8 +80,8 @@ boolean BetterTransferI2CMaster::receiveData(){
     }
 
     if(calc_CS == rx_buffer[rx_array_inx-1]){//CS good
-        rx_len = 0;
-        rx_array_inx = 0;
+      rx_len = 0;
+      rx_array_inx = 0;
       if (memcmp(address, rx_buffer,size)){
         memcpy(address,rx_buffer,size);
         return true;
@@ -91,7 +91,7 @@ boolean BetterTransferI2CMaster::receiveData(){
     }
 
     else{
-    //failed checksum, need to clear this out anyway
+      //failed checksum, need to clear this out anyway
       rx_len = 0;
       rx_array_inx = 0;
       return false;
