@@ -1,7 +1,7 @@
 #include "BetterTransferI2CSlave.h"
 
 
-void BetterTransferI2CSlave::begin(uint8_t * ptr, uint8_t length){
+BetterTransferI2CSlave::BetterTransferI2CSlave(uint8_t * ptr, uint8_t length){
   address = ptr;
   size = length;
 

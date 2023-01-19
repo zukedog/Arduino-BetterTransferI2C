@@ -19,17 +19,15 @@ struct STRUCT_TWO {
 
 
 STRUCT_ONE struct_one;
-BetterTransferI2CSlave bt_struct_one;
+BetterTransferI2CSlave bt_struct_one(details(struct_one));
 
 STRUCT_TWO struct_two;
-BetterTransferI2CSlave bt_struct_two;
+BetterTransferI2CSlave bt_struct_two(details(struct_two));
 
 
 void setup() {
   Serial.begin(115200);
   Wire.begin(I2C_SLAVE_ADDRESS);
-  bt_struct_one.begin(details(struct_one));
-  bt_struct_two.begin(details(struct_two));
 
   inputString.reserve(10);
   Wire.onReceive(BetterTransferI2CSlave::onReceive);
@@ -37,13 +35,13 @@ void setup() {
 }
 
 void displayData() {
-  Serial.print("[struct_one{\"count\":\"");
+  Serial.print("{struct_one:{\"count\":\"");
   Serial.print(struct_one.count);
-  Serial.print("\", \"toggle:\"");
+  Serial.print("\", \"toggle\":\"");
   Serial.print(struct_one.toggle);
-  Serial.print("\"}, struct_two{\"number\":\"");
+  Serial.print("\"}, struct_two:{\"number\":\"");
   Serial.print(struct_two.number);
-  Serial.print("\"}]");
+  Serial.print("\"}}");
 }
 
 void loop() {

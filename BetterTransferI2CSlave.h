@@ -47,7 +47,7 @@
 
 class BetterTransferI2CSlave {
 public:
-    void begin(uint8_t *, uint8_t);
+    BetterTransferI2CSlave(uint8_t *, uint8_t);
     void sendData();
     static void onSend();
     static void onReceive(int);

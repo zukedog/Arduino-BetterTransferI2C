@@ -1,4 +1,5 @@
 # Better Transfer I2C
+Overhauled by Zukedog2000.
 Forked from the library [Easy Transfer]() by [Bill Porter](www.billporter.info) and Mathieu Alorent.
 
 Better Transfer I2C is a library for trasfering entire structs from one Arduino to another using the I2C bus. Based on the I2C implementation from the library [Easy Transfer](), Better Transfer I2C has been overhauled to enable transfering the structs not only from the I2C Master to the I2C Slave but from the I2C Slave to the I2C Master as well. This enables bi-directional communication and the ability to keep variables on 2 Arduinos in sync. Better Transfer I2C has also improved upon the protocol used to communicate to enable multiple different structs to be sent between the Arduinos. This means that you can have multiple structs synced between multiple Arduinos.

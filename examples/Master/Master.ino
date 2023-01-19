@@ -37,13 +37,13 @@ void setup() {
 }
 
 void displayData() {
-  Serial.print("[struct_one{\"count\":\"");
+  Serial.print("{struct_one:{\"count\":\"");
   Serial.print(struct_one.count);
-  Serial.print("\", \"toggle:\"");
+  Serial.print("\", \"toggle\":\"");
   Serial.print(struct_one.toggle);
-  Serial.print("\"}, struct_two{\"number\":\"");
+  Serial.print("\"}, struct_two:{\"number\":\"");
   Serial.print(struct_two.number);
-  Serial.print("\"}]");
+  Serial.print("\"}}");
 }
 
 
