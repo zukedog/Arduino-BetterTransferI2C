@@ -42,16 +42,15 @@ boolean BetterTransferI2CMaster::receiveData(){
   //say what we want
   _serial->write(index);
   _serial->endTransmission();
-
   _serial->requestFrom(i2c_address, (uint8_t)(size+4));
   //this size check may be redundant due to the size check below, but for now I'll leave it the way it is.
   //this will block until a 0x06 is found or buffer size becomes less then 3.
-  if (!_serial->available() || _serial->read() != 0x06){
-    while (_serial->available()){
-      _serial->read();
-    }
+  while (_serial->available() && _serial->read() != 0x06){
+  }
+  if (!_serial->available()){
     return false;
   }
+
 
   if(_serial->available() < 3){
     return false;
@@ -70,7 +69,6 @@ boolean BetterTransferI2CMaster::receiveData(){
   while(_serial->available() && rx_array_inx <= rx_len){
     rx_buffer[rx_array_inx++] = _serial->read();
   }
-
   if(rx_len == (rx_array_inx-1)){
     //seem to have got whole message
     //last uint8_t is CS
